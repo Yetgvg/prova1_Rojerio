@@ -8,14 +8,12 @@ class MyHttpOverrides extends HttpOverrides {
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) =>
-              true; // Ignora todos os erros de certificado
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
 void main() {
-  HttpOverrides.global =
-      MyHttpOverrides(); // Define o HttpOverride globalmente para o aplicativo
+  HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
 }
 

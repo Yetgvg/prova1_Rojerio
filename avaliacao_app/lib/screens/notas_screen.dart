@@ -13,6 +13,7 @@ class NotasScreen extends StatefulWidget {
 
 class _NotasScreenState extends State<NotasScreen> {
   List<dynamic> alunos = [];
+  List<dynamic> alunosFiltrados = [];
 
   @override
   void initState() {
@@ -27,12 +28,33 @@ class _NotasScreenState extends State<NotasScreen> {
     if (response.statusCode == 200) {
       setState(() {
         alunos = json.decode(response.body);
+        alunosFiltrados = alunos; // Inicialmente, exiba todos os alunos
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao carregar notas!')),
       );
     }
+  }
+
+  void filtrarNotasMenorQue60() {
+    setState(() {
+      alunosFiltrados = alunos.where((aluno) => aluno['nota'] < 60).toList();
+    });
+  }
+
+  void filtrarNotasEntre60e100() {
+    setState(() {
+      alunosFiltrados = alunos
+          .where((aluno) => aluno['nota'] >= 60 && aluno['nota'] < 100)
+          .toList();
+    });
+  }
+
+  void filtrarNotasIgual100() {
+    setState(() {
+      alunosFiltrados = alunos.where((aluno) => aluno['nota'] == 100).toList();
+    });
   }
 
   @override
@@ -47,41 +69,25 @@ class _NotasScreenState extends State<NotasScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    alunos =
-                        alunos.where((aluno) => aluno['nota'] < 60).toList();
-                  });
-                },
-                child: Text('Notas < 60'),
+                onPressed: filtrarNotasMenorQue60,
+                child: Text('Notas baixas'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    alunos = alunos
-                        .where((aluno) =>
-                            aluno['nota'] >= 60 && aluno['nota'] < 100)
-                        .toList();
-                  });
-                },
-                child: Text('Notas >= 60 e < 100'),
+                onPressed: filtrarNotasEntre60e100,
+                child: Text('Notas na média'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    alunos =
-                        alunos.where((aluno) => aluno['nota'] == 100).toList();
-                  });
-                },
-                child: Text('Notas = 100'),
+                onPressed: filtrarNotasIgual100,
+                child: Text('Notas perfeitas'),
               ),
             ],
           ),
+          SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
-              itemCount: alunos.length,
+              itemCount: alunosFiltrados.length,
               itemBuilder: (context, index) {
-                final aluno = alunos[index];
+                final aluno = alunosFiltrados[index];
                 Color bgColor;
                 if (aluno['nota'] == 100) {
                   bgColor = Colors.green;

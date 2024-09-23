@@ -47,6 +47,16 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
+            ClipOval(
+              child: const Image(
+                image: NetworkImage(
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2owgtagk4Mo5wda4EOalu3DOhscqDf8onng&s',
+                ),
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(labelText: 'Nome'),
